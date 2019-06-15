@@ -4,9 +4,6 @@
 % Code to implement harmonic demodulation of speech signals.
 % For details on the technique, reference paper and contact details of author see:
 % link https://github.com/neerajww/tvhDemodulation
-% Written by: Neeraj Sharma, CMU, USA
-% Last edit: 06/16/2019
-
 
 % addpath('../legacy_STRAIGHT/src'); % download from https://github.com/HidekiKawahara/legacy_STRAIGHT
 sound_path = '../sound/';
@@ -86,6 +83,7 @@ for i = 1:length(fname)
     [sub_sigs] = tvh_synthesis(sub_sigs,qhd,Fs);
 
     suffix = '_analy_syn';
-    tvh_save_soundfiles(sub_sigs,qhd,Fs,store_path,suffix);
+    tvh_save_soundfiles(sub_sigs,qhd,Fs,store_path,suffix);        
+    %return;       
 end
     
