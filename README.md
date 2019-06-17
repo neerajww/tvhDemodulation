@@ -18,15 +18,16 @@ This repository contains the manuscript explaining the approach in detail, and t
 - Run ./code/demo_psm.m to see pitch-scale modification example
 - Run ./code/demo_voice_manip.m to see voice manipulation example
 
-##### Relevant publication:
+#### Relevant publication
 If you find the approach useful, we will be very happy to see the following cited in your work: "Time-varying sinusoidal demodulation for non-stationary modeling of speech", in Speech Communication (vol. 105), 2018.
 Link: https://www.sciencedirect.com/science/article/pii/S0167639318300773
 
-###### Additional demos:
+#### Additional demos
 Link: https://neerajww.github.io/preprint/demo/modeling/tvnm.html
 
-###### Contributors:
+#### Contributors
 Neeraj Kumar Sharma, T. V. Sreenivas
 
 The work was done at the Indian Institute of Science, Bangalore.
-To see where am I currently, go to: www.neerajww.github.io 
+###### To see where am I currently:
+Go to: www.neerajww.github.io 
