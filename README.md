@@ -8,7 +8,7 @@ Speech signals contain a fairly rich time-evolving spectral content. Accurate an
 
 This repository contains the manuscript explaining the approach in detail, and the code to implement the approach. The manuscript is shared for academic and personal use only. Any other use requires prior permission of the authors.
 
-###### Code details
+#### Code details
 - ./code contains MATLAB codes
 - ./manuscript contains the paper copy
 - ./sound contains the sound samples used by the codes
@@ -18,7 +18,7 @@ This repository contains the manuscript explaining the approach in detail, and t
 - Run ./code/demo_psm.m to see pitch-scale modification example
 - Run ./code/demo_voice_manip.m to see voice manipulation example
 
-###### Relevant publication:
+##### Relevant publication:
 If you find the approach useful, we will be very happy to see the following cited in your work: "Time-varying sinusoidal demodulation for non-stationary modeling of speech", in Speech Communication (vol. 105), 2018.
 Link: https://www.sciencedirect.com/science/article/pii/S0167639318300773
 
