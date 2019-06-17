@@ -1,22 +1,32 @@
-# Prism for speech? Time-varying sinusoidal demodulation for non-stationary modeling of speech
-Speech signals contain a fairly rich time-evolving spectral content. Accurate analysis of this time-evolving spectrum is an open challenge in signal processing. Towards this, we visit timevarying sinusoidal modeling of speech and propose an alternate modele stimation approach. The estimation operates on the whole signal without any short-time analysis.
+# Time-varying sinusoidal demodulation for non-stationary modeling of speech
+Speech signals contain a fairly rich time-evolving spectral content. Accurate analysis of this time-evolving spectrum is an open challenge in signal processing. Towards this, we visit time varying sinusoidal modeling of speech and propose an alternate model estimation approach. The estimation operates on the whole signal without any short-time analysis. The technique is effective for:
+- analysis and synthesis
+- time-scale modification
+- pitch-scale modification
+- voice manipulation
+- modulation filtering
 
-The repository contains the data and codes used in the study.
+This repository contains the manuscript explaining the approach in detail, and the code to implement the approach. The manuscript is shared for academic and personal use only. Any other use requires prior permission of the authors.
+
+###### Code details
+- ./code contains all MATLAB codes
+- ./manuscript contains the paper copy
+- ./sound contains the sound samples used by the codes
+- Run ./code/demo_analy_syn.m to see analysis-synthesis example
+- Run ./code/demo_tsm.m to see time-scale modification example
+- Run ./code/demo_psm.m to see pitch-scale modification example
+- Run ./code/demo_voice_manip.m to see voice manipulation example
+- ./code/data/ stores the resulting sound samples 
 
 ###### Relevant publication:
-Time-varying sinusoidal demodulation for non-stationary modeling of speech, in Speech Communication (vol. 105), 2018.
-
+If you find the approach useful we will be very happy to see the following cited in your work. "Time-varying sinusoidal demodulation for non-stationary modeling of speech", in Speech Communication (vol. 105), 2018.
 Link: https://www.sciencedirect.com/science/article/pii/S0167639318300773
 
-Copy available at: ./manuscript/2018_time_varying_sinusoidal_demodulation_ntvs.pdf
-
-The manuscript is shared here for academic and personal use only. Any other use requires prior permission of the authors.
-
-###### Some more demos:
+###### Additional demos:
 Link: https://neerajww.github.io/preprint/demo/modeling/tvnm.html
 
 ###### Contributors:
 Neeraj Kumar Sharma, T. V. Sreenivas
 
 The work was done at the Indian Institute of Science, Bangalore.
-
+Where am I: www.neerajww.github.io 

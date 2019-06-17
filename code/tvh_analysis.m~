@@ -168,7 +168,8 @@ for i = 2:qhd.nharm
         % ----- update IF
         if j<qhd.iq_times
         v_fm{j+1}(:,i) = v_fm{j}(:,i)+medfilt1([diff(unwrap(pm_corr))/Ts/2/pi;0],5);
-
+        v_fm{j+1}
+        
         L = fix(1/vfc_fm*5*Fs/2);
         h = fir1(L,vfc_fm*2 /Fs);
         v_fm{j+1}(:,i) = freq_filtering(v_fm{j+1}(:,i),h,qhd.ftimes); 

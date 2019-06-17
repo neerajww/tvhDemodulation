@@ -1,15 +1,16 @@
 
 
-% Code to implement harmonic demodulation of speech signals.
+
+% Code to implement harmonic demodulation, time-scale modification, and synthesis of speech signals.
 % For details on the technique, reference paper and contact details of author see:
 % link https://github.com/neerajww/tvhDemodulation
 % Written by: Neeraj Sharma, CMU, USA
 % Last edit: 06/16/2019
 
-clearvars;
-addpath('/Users/neeks/Desktop/Documents/work/code/matlab_codes/others_codes/legacy_STRAIGHT/src'); % download from https://github.com/HidekiKawahara/legacy_STRAIGHT
+
+% addpath('../legacy_STRAIGHT/src'); % download from https://github.com/HidekiKawahara/legacy_STRAIGHT
 sound_path = '../sound/';
-store_path = './data/analy_syn/';
+store_path = './data/voice_manip/';
 store_path_F0 = './data/f0_tracks/';
 if (~ isdir(store_path))
     mkdir (store_path);
@@ -25,9 +26,13 @@ is_track = 1; % F0 track available
 
 % resampling rate
 Fs_new = 8e3;
+
+% time scale modification factor (tsm)
+alpha = 0.75;
+
 for i = 1:length(fname)
     % init qhd params
-    if is_male 
+    if i == 1
         qhd.uBW_am = 1950;
         qhd.uBW_fm = 1950;
         qhd.nu = 0.05;
@@ -61,7 +66,7 @@ for i = 1:length(fname)
     t = 0:Ts:len*Ts-Ts;
 
     % obtain instantaenous F0 estimates    
-    if ~is_track
+    if 0
        % call STRAIGHT 
        [f0s] = exstraightsource(x,Fs);
         % save F0 track
@@ -83,10 +88,14 @@ for i = 1:length(fname)
     qhd.nharm = 14; % custom choice
     [sub_sigs,qhd] = tvh_analysis(f0s(:,2),Fs,qhd);
 
-    % do qhd synthesis
-    [sub_sigs] = tvh_synthesis(sub_sigs,qhd,Fs);
+    % do time-stretching
+    [sub_sigs_new] = tvh_time_stretch(sub_sigs,qhd,Fs,alpha);
 
-    suffix = '_analy_syn';
-    tvh_save_soundfiles(sub_sigs,qhd,Fs,store_path,suffix);
+    % do qhd synthesis
+    [sub_sigs_new] = tvh_synthesis(sub_sigs_new,qhd,Fs);
+
+    % do save files
+    suffix = ['_tsm_alpha_' strrep(num2str(alpha),'.','_')];
+    tvh_save_soundfiles(sub_sigs_new,qhd,Fs,store_path,suffix);
 end
     
