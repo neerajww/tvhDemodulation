@@ -31,4 +31,4 @@ The code also makes use of the vocoder https://github.com/HidekiKawahara/legacy_
 
 The work was done at the Indian Institute of Science, Bangalore.
 ###### To see where am I currently:
-Go to: www.neerajww.github.io 
+Go to: https://neerajww.github.io/
