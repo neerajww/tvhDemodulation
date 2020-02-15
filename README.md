@@ -1,5 +1,5 @@
 # Time-varying sinusoidal demodulation for non-stationary modeling of speech
-Speech signals contain a fairly rich time-evolving spectral content. Accurate analysis of this time-evolving spectrum is an open challenge in signal processing. Towards this, we visit time varying sinusoidal modeling of speech and propose an alternate model estimation approach. The estimation operates on the whole signal without any short-time analysis. The technique is effective for:
+Speech signals contain a fairly rich time-evolving spectral content. Accurate analysis of this time-evolving spectrum is an open challenge in signal processing. Towards this, we visit time varying sinusoidal modeling of speech and propose an alternate model estimation approach to analyse speech. The estimation operates on the whole signal without any short-time analysis. The technique is effective for:
 - analysis and synthesis
 - time-scale modification
 - pitch-scale modification
@@ -14,8 +14,6 @@ This repository contains the manuscript explaining the approach in detail, and t
 - ./sound contains the sound samples used by the codes
 - ./code/data/ stores the resulting sound samples 
 - Run ./code/demo_analy_syn.m to see analysis-synthesis example
-- Run ./code/demo_tsm.m to see time-scale modification example
-- Run ./code/demo_psm.m to see pitch-scale modification example
 - Run ./code/demo_voice_manip.m to see voice manipulation example
 
 #### Relevant publication
@@ -27,6 +25,9 @@ Link: https://neerajww.github.io/preprint/demo/modeling/tvnm.html
 
 #### Contributors
 Neeraj Kumar Sharma, T. V. Sreenivas
+
+#### Acknowledgement
+The code also makes use of the vocoder https://github.com/HidekiKawahara/legacy_STRAIGHT to obtain pitch estimates. This is bundled in the current repository (with its license file).
 
 The work was done at the Indian Institute of Science, Bangalore.
 ###### To see where am I currently:
