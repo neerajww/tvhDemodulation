@@ -1,23 +1,17 @@
 
-
-function [sub_sigs,qhd] = tvh_analysis(f0,Fs,qhd)
+function [qhd] = tvh_analysis(qhd)
 
 % ----- inits
-Fs_resamp = 16e3;
-Fs_new = Fs;
+Fs = qhd.Fs;
+f0 = qhd.f0;
 
 % ----- inits
 v_fm = cell(1,qhd.iq_times);
 v_am = cell(1,qhd.iq_times);
 
-% ----- resample
-x = resample(qhd.x,Fs_resamp,Fs);
-f0 = resample(f0,Fs_resamp,Fs);
-x_orig = x;
-Fs = Fs_resamp;
-
 Ts = 1/Fs;
-len = length(x);
+len = length(qhd.x);
+x_orig = qhd.x;
 
 % ----- ----- refine and estimate IA/IF of FFS via IQ
 fm_est(:,1) = f0;
@@ -60,16 +54,17 @@ for i = 1:qhd.iq_times
     fm_est(:,2) = fm_est(:,2)+medfilt1([diff(unwrap(pm_corr))/Ts/2/pi;0],5);
     L = fix(1/qhd.vBW_fm*5*Fs);
     h = fir1(L,qhd.vBW_fm*2 /Fs);
-    fm_est(:,2) = freq_filtering(fm_est(:,2),h,1); 
+    fm_est(:,2) = freq_filtering(fm_est(:,2),h,qhd.ftimes); 
     end
     fm_est(find(fm_est(:,2)<50),2) = 10;
-    
     end
 end
 
 % ----- V/UV streaming
 uv_indx = find(am_est(:,2)<qhd.nu*max(am_est(:,2)) | fm_est(:,2)<30); 
 v_mask = ones(len,1); v_mask(uv_indx,1) = 0;
+uv_mask = zeros(len,1); uv_mask(uv_indx,1) = 1;
+
 
 v_fm_est = fm_est(:,2);
 v_fm_est(uv_indx,1) = 0;
@@ -82,8 +77,8 @@ ux_orig(uv_indx) = x_orig(uv_indx);
 
 % ----- unvoiced IA/IF estimation
 hux = hilbert(ux_orig);
-u_am_est = abs(hux);
-u_pm_est = angle(hux);
+u_am_est = uv_mask.*abs(hux);
+u_pm_est = uv_mask.*angle(hux);
 u_fm_est = [-diff(unwrap(u_pm_est))/Ts/2/pi; zeros(1,1)];
 
 % ----- LPF unvoiced IA and IF 
@@ -120,7 +115,7 @@ u_fm = u_fm_est;
 %med_vfmest = median(v_fm_est(v_fm_est>0));
 % nharm = fix(6e3/med_vfmest);
 %              nharm = 20;
-qhd.nharm = fix(4e3/median(v_fm_est(v_mask>0,1)));
+qhd.nharm = fix(7e3/median(v_fm_est(v_mask>0,1)));
 %display(qhd.nharm)
 for i = 1:qhd.iq_times
 v_am{i} = zeros(length(x_orig),qhd.nharm);
@@ -136,13 +131,13 @@ vfc_am = qhd.vBW_am(1);
 vfc_fm = qhd.vBW_fm(1); 
 
 % qhd.nharm = fix(4.0e3/median(v_fm{1}(v_mask>0,1)));
-qhd.nharm = fix(4e3/median(v_fm{1}(v_mask>0,1)));
+qhd.nharm = fix(7e3/median(v_fm{1}(v_mask>0,1)));
 display(['Number of harmonic used (updated): ' num2str(qhd.nharm)])
 for i = 2:qhd.nharm
     v_fm{1}(:,i) = i*v_fm{1}(:,1);
     for j = 1:qhd.iq_times
         
-        v_fm{j}(v_fm{j}(:,i)>4e3,i) = 4e3;
+        v_fm{j}(v_fm{j}(:,i)>Fs/2,i) = Fs/2;
         in_ph_sig = sin(cumsum(2*pi*v_fm{j}(:,i))*Ts);
         qu_ph_sig = cos(cumsum(2*pi*v_fm{j}(:,i))*Ts);
         
@@ -181,26 +176,33 @@ end
 % ----- synthesize voiced
 v_syn_sig = zeros(length(x_orig),1);
 for j = 1:qhd.nharm
-    zero_mask = v_fm{qhd.iq_times}(:,j)<3.5e3;
+    zero_mask = v_fm{qhd.iq_times}(:,j)<7e3;
     v_syn_sig = v_syn_sig+zero_mask.*v_am{qhd.iq_times}(:,j).*sin(cumsum(2*pi*(v_fm{qhd.iq_times}(:,j))*Ts));
 end
 
 % ----- synthesize unvoiced
 u_syn_sig = u_am.*sin(cumsum(2*pi*u_fm)*Ts);
-
 % ----- synthesize whole signal
 syn_sig = v_syn_sig + u_syn_sig;
-
 % ----- 
-sub_sigs.v_am = resample(v_am{qhd.iq_times},Fs_new,Fs);
-sub_sigs.v_fm = resample(v_fm{qhd.iq_times},Fs_new,Fs);
+qhd.v_am = v_am{qhd.iq_times};
+qhd.v_fm = v_fm{qhd.iq_times};
+qhd.u_am = u_am;
+qhd.u_fm = u_fm;
 
-sub_sigs.u_am = resample(u_am,Fs_new,Fs);
-sub_sigs.u_fm = resample(u_fm,Fs_new,Fs);
-sub_sigs.syn_qhd = resample(syn_sig,Fs_new,Fs);
+% uncomment below if resampling is needed
+% qhd.v_am = resample(v_am{qhd.iq_times},qhd.Fs,qhd.Fs);
+% qhd.v_fm = resample(v_fm{qhd.iq_times},qhd.Fs,qhd.Fs);
+% 
+% qhd.u_am = resample(u_am,qhd.Fs,qhd.Fs);
+% qhd.u_fm = resample(u_fm,qhd.Fs,qhd.Fs);
+% qhd.syn_qhd = resample(syn_sig,qhd.Fs,qhd.Fs);
+qhd.syn_qhd = syn_sig;
+qhd.syn_voiced = v_syn_sig;
+qhd.syn_uvoiced = u_syn_sig;
 
-sub_sigs.v_am(sub_sigs.v_am<0) = 0; 
-sub_sigs.v_am(sub_sigs.v_fm<0) = 0; 
-
+qhd.v_am(qhd.v_am<0) = 0; 
+qhd.v_fm(qhd.v_fm<0) = 0; 
+qhd.v_fm(qhd.v_fm>qhd.Fs/2) = qhd.Fs; 
 end
 

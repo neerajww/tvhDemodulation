@@ -1,17 +1,16 @@
 
 
-function [sub_sigs] = tvh_synthesis(sub_sigs,qhd,Fs)
+function [qhd] = tvh_synthesis(qhd)
+    Fs = qhd.Fs;
+    Ts = 1/Fs;
 
-Ts = 1/Fs;
-v_syn_sig = zeros(size(sub_sigs.v_am,1),1);
-% ----- synthesize am and fm voiced
-for k = 1:qhd.nharm
-    v_syn_sig = v_syn_sig+sub_sigs.v_am(:,k).*sin(cumsum(2*pi*sub_sigs.v_fm(:,k)*Ts));
-end
-
-u_syn_sig = sub_sigs.u_am.*sin(cumsum(2*pi*sub_sigs.u_fm)*Ts);
-
-% ----- synthesize complete signal
-sub_sigs.syn_qhd = v_syn_sig + u_syn_sig; 
-
+    v_syn_sig = zeros(size(qhd.v_am,1),1);
+    for k = 1:qhd.nharm
+        v_syn_sig = v_syn_sig+qhd.v_am(:,k).*sin(cumsum(2*pi*qhd.v_fm(:,k)*Ts));
+    end
+    u_syn_sig = qhd.u_am.*sin(cumsum(2*pi*qhd.u_fm)*Ts);
+    % ----- synthesize complete signal
+    qhd.syn_sig = v_syn_sig + u_syn_sig;
+    qhd.vsyn_sig = v_syn_sig;
+    qhd.usyn_sig = u_syn_sig;
 end
