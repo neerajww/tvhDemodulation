@@ -22,6 +22,8 @@ if (~ isdir(store_path_F0))
 end
 
 fname = {'sub_01_sent_01.wav'};
+fname = {'6241-61943-0007.wav'};
+
 is_track = 1; % F0 track available
 
 % resampling rate
